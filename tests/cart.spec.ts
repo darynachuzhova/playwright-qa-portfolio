@@ -28,8 +28,9 @@ test('cart shows correct item after adding to cart', async ({ page }) => {
   await addItemToCart(page, 'Sauce Labs Backpack');
   await page.locator('.shopping_cart_link').click();
   await expect(page).toHaveURL('https://www.saucedemo.com/cart.html');
-  await expect(page.locator('.cart_item')).toHaveCount(1);
-  await expect(page.locator('.inventory_item_name')).toHaveText('Sauce Labs Backpack');
+  const cartItem = page.locator('.cart_item');
+  await expect(cartItem).toHaveCount(1);
+  await expect(cartItem.locator('.inventory_item_name')).toHaveText('Sauce Labs Backpack');
 });
 
 test('cart badge shows 2 after adding two items', async ({ page }) => {
