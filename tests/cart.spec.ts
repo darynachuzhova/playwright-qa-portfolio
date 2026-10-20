@@ -1,12 +1,6 @@
 import { test, expect, type Page } from '@playwright/test';
+import { logIn } from './helpers/auth';
 
-async function logIn(page: Page) {
-  await page.goto('https://www.saucedemo.com');
-  await page.getByRole('textbox', { name: 'Username' }).fill('standard_user');
-  await page.getByRole('textbox', { name: 'Password' }).fill('secret_sauce');
-  await page.getByRole('button', { name: 'Login' }).click();
-  await expect(page).toHaveURL('https://www.saucedemo.com/inventory.html');
-}
 
 async function addItemToCart(page: Page, itemName: string) {
   await page.locator('.inventory_item').filter({ hasText: itemName }).getByRole('button', { name: 'Add to cart' }).click();
