@@ -1,5 +1,5 @@
 import { expect, type Page } from '@playwright/test';
-import { standard_user, secret_sauce, standardUser } from '../data/users';
+import { standardUser } from '../data/users';
 
 export async function logIn(page: Page) {
   await page.goto('https://www.saucedemo.com');
