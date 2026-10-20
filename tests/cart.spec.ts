@@ -1,5 +1,6 @@
 import { test, expect, type Page } from '@playwright/test';
 import { logIn } from './helpers/auth';
+import { InventoryPage } from './pages/inventory.page';
 
 
 async function addItemToCart(page: Page, itemName: string) {
@@ -13,7 +14,9 @@ test('cart badge is not visible before adding item', async ({ page }) => {
 
 test('cart badge shows 1 after adding one item', async ({ page }) => {
   await logIn(page);
-  await addItemToCart(page, 'Sauce Labs Backpack');
+  
+  const inventtoryPage = new InventoryPage(page);
+  await inventtoryPage.addItemToCart('Sauce Labs Backpack');
   await expect(page.locator('.shopping_cart_badge')).toHaveText('1');
 });
 
@@ -29,8 +32,10 @@ test('cart shows correct item after adding to cart', async ({ page }) => {
 
 test('cart badge shows 2 after adding two items', async ({ page }) => {
   await logIn(page);
-  await addItemToCart(page, 'Sauce Labs Backpack');
-  await addItemToCart(page, 'Sauce Labs Bolt T-Shirt');
+  const inventoryPage = new InventoryPage(page);
+  
+  await inventoryPage.addItemToCart('Sauce Labs Backpack');
+  await inventoryPage.addItemToCart('Sauce Labs Bolt T-Shirt');
   await expect(page.locator('.shopping_cart_badge')).toHaveText('2');
 });
 
