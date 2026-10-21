@@ -22,7 +22,9 @@ test('cart badge shows 1 after adding one item', async ({ page }) => {
 
 test('cart shows correct item after adding to cart', async ({ page }) => {
   await logIn(page);
-  await addItemToCart(page, 'Sauce Labs Backpack');
+
+  const inventtoryPage = new InventoryPage(page);
+  await inventtoryPage.addItemToCart('Sauce Labs Backpack');
   await page.locator('.shopping_cart_link').click();
   await expect(page).toHaveURL('https://www.saucedemo.com/cart.html');
   const cartItem = page.locator('.cart_item');
@@ -41,7 +43,8 @@ test('cart badge shows 2 after adding two items', async ({ page }) => {
 
 test('cart badge shows 0 after removing all item', async ({ page }) => {
   await logIn(page);
-  await addItemToCart(page, 'Sauce Labs Backpack');
+  const inventoryPage = new InventoryPage(page);
+  await inventoryPage.addItemToCart('Sauce Labs Backpack');
   await expect(page.locator('.shopping_cart_badge')).toHaveText('1');
   await page.locator('.inventory_item').filter({ hasText: 'Sauce Labs Backpack' }).getByRole('button', { name: 'Remove' }).click();
   await expect(page.locator('.shopping_cart_badge')).not.toBeVisible();
