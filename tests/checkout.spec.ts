@@ -1,0 +1,34 @@
+import test, { expect } from '@playwright/test';
+import { logIn } from './helpers/auth';
+import { InventoryPage } from './pages/inventory.page';
+import { checkoutCustomer} from './data/checkout';
+
+test ('customer can complete checkout for a backpack', async ({ page }) => {
+    await logIn(page);
+    const inventoryPage = new InventoryPage(page);
+    await inventoryPage.addItemToCart('Sauce Labs Backpack');
+    await expect(page.locator('.shopping_cart_badge')).toHaveText('1');
+    await page.locator('.shopping_cart_link').click();
+    await expect(page).toHaveURL('https://www.saucedemo.com/cart.html');
+    await page.getByRole('button', { name: 'Checkout' }).click();
+    await expect(page).toHaveURL('https://www.saucedemo.com/checkout-step-one.html');
+    await page.getByRole('textbox', { name: 'First Name', exact: true }).fill(checkoutCustomer.firstName);
+    await page.getByRole('textbox', { name: 'Last Name', exact: true }).fill(checkoutCustomer.lastName);
+    await page.getByRole('textbox', { name: 'Zip/Postal Code', exact: true }).fill(checkoutCustomer.postalCode);
+    await page.getByRole('button', { name: 'Continue' }).click();
+    await expect(page).toHaveURL('https://www.saucedemo.com/checkout-step-two.html');
+    await expect(page.locator('.cart_item')).toHaveCount(1);
+    await expect(page.locator('.inventory_item_name')).toHaveText('Sauce Labs Backpack');
+    await expect(page.locator('[data-test="item-quantity"]')).toHaveText('1');
+    await expect(page.locator('.inventory_item_price')).toHaveText('$29.99');
+    await expect(page.locator('.summary_subtotal_label')).toHaveText('Item total: $29.99');
+    await expect(page.locator('.summary_tax_label')).toHaveText('Tax: $2.40');
+    await expect(page.locator('.summary_total_label')).toHaveText('Total: $32.39');
+    await expect(page.locator('.summary_info_label')).toHaveText(['Payment Information:', 'Shipping Information:', 'Price Total']);
+    await page.getByRole('button', { name: 'Finish' }).click();
+    await expect(page).toHaveURL('https://www.saucedemo.com/checkout-complete.html');
+    await expect(page.locator('.complete-header')).toHaveText('Thank you for your order!');
+    await expect(page.locator('.complete-text')).toHaveText('Your order has been dispatched, and will arrive just as fast as the pony can get there!');
+    await page.getByRole('button', { name: 'Back Home' }).click();
+    await expect(page).toHaveURL('https://www.saucedemo.com/inventory.html');
+});
