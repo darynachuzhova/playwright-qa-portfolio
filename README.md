@@ -1,8 +1,8 @@
 # Playwright QA Portfolio
 
-Practice project for end-to-end UI testing with Playwright and TypeScript against [Sauce Demo](https://www.saucedemo.com/).
+Practice project for UI and API testing with Playwright and TypeScript. The UI tests target [SauceDemo](https://www.saucedemo.com/), while the API tests target [JSONPlaceholder](https://jsonplaceholder.typicode.com/).
 
-## Coverage
+## UI coverage (SauceDemo)
 
 - Login with valid credentials, required-field errors, invalid credentials, and logout
 - Cart badge, adding and removing products, and cart contents
@@ -10,7 +10,17 @@ Practice project for end-to-end UI testing with Playwright and TypeScript agains
 - Product sorting by price, low to high
 - End-to-end checkout: add a product, enter customer details, review the order, and confirm completion
 
-Each test starts with its own isolated browser context. Tests that need an authenticated session call `logIn(page)` from `tests/helpers/auth.ts`. The public Sauce Demo account used in the tests is defined in `tests/data/users.ts`.
+Each UI test starts with its own isolated browser context. Tests that need an authenticated session call `logIn(page)` from `tests/helpers/auth.ts`. The public SauceDemo account used in the tests is defined in `tests/data/users.ts`.
+
+## API coverage (JSONPlaceholder)
+
+`tests/api/posts.spec.ts` contains three API tests:
+
+- `GET /posts/1` returns HTTP 200 and a post with the expected IDs and a non-empty title
+- `GET /posts/9999` returns HTTP 404 and an empty JSON object
+- `POST /posts` returns HTTP 201 and the submitted post data
+
+JSONPlaceholder simulates the POST response; it does not persist newly created posts.
 
 ## Run locally
 
@@ -50,6 +60,7 @@ npx playwright show-report
 
 ```text
 tests/
+  api/posts.spec.ts
   cart.spec.ts
   checkout.spec.ts
   login.spec.ts
